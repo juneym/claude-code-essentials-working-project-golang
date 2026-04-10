@@ -1,0 +1,149 @@
+basePath: /
+definitions:
+  handler.EchoRequest:
+    description: Echo request payload
+    properties:
+      message:
+        example: hello world
+        type: string
+    required:
+    - message
+    type: object
+  handler.EchoResponse:
+    description: Echo response envelope
+    properties:
+      echo:
+        example: hello world
+        type: string
+    type: object
+  handler.ErrorResponse:
+    description: Standard error envelope
+    properties:
+      error:
+        example: invalid input
+        type: string
+    type: object
+  handler.GoMemStats:
+    description: Go runtime memory statistics
+    properties:
+      heap_alloc_bytes:
+        example: 2097152
+        type: integer
+      heap_in_use_bytes:
+        example: 3145728
+        type: integer
+      total_alloc_bytes:
+        example: 10485760
+        type: integer
+    type: object
+  handler.StatsResponse:
+    description: Server and runtime statistics
+    properties:
+      go_mem:
+        $ref: '#/definitions/handler.GoMemStats'
+      server_time_utc:
+        example: "2026-04-10T12:00:00Z"
+        type: string
+      sys_mem:
+        $ref: '#/definitions/handler.SysMemStats'
+    type: object
+  handler.SysMemStats:
+    description: Operating system memory statistics
+    properties:
+      total_bytes:
+        example: 17179869184
+        type: integer
+      used_bytes:
+        example: 8589934592
+        type: integer
+      used_percent:
+        example: 50
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Echo and server statistics API
+  title: Hello World Tasks API
+  version: "1.0"
+paths:
+  /echo:
+    get:
+      consumes:
+      - application/json
+      description: Accepts a message via query param (GET) or JSON body (POST) and
+        returns it unchanged
+      parameters:
+      - description: Message to echo (GET)
+        in: query
+        name: message
+        type: string
+      - description: Message to echo (POST)
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/handler.EchoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.EchoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Echo a message
+      tags:
+      - echo
+    post:
+      consumes:
+      - application/json
+      description: Accepts a message via query param (GET) or JSON body (POST) and
+        returns it unchanged
+      parameters:
+      - description: Message to echo (GET)
+        in: query
+        name: message
+        type: string
+      - description: Message to echo (POST)
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/handler.EchoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.EchoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Echo a message
+      tags:
+      - echo
+  /stats:
+    get:
+      description: Returns UTC server time, OS memory usage (total, in use, in-use
+        %), and Go runtime heap stats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.StatsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Server statistics
+      tags:
+      - stats
+schemes:
+- http
+swagger: "2.0"

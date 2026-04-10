@@ -1,0 +1,13 @@
+# Compiled binaries
+hello-world-tasks
+*.exe
+
+# Test coverage output
+coverage.out
+
+# IDE / editor directories
+.idea/
+.vscode/
+
+# Claude Code local state
+.claude/
